@@ -6,6 +6,8 @@ import personal from '@/lib/config/personal';
 
 export const runtime = 'nodejs';
 
+export const dynamic = 'force-static';
+
 export const size = {
   width: 1200,
   height: 630,

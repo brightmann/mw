@@ -48,7 +48,7 @@ const ArticlesContent = memo(() => (
         </div>
       }
     >
-      <Articles />
+      <Articles page={1} />
     </Suspense>
   </div>
 ));

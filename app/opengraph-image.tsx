@@ -5,6 +5,8 @@ import personal from '@/lib/config/personal';
 
 export const runtime = 'nodejs';
 
+export const dynamic = 'force-static';
+
 export const alt = `${personal.name} - ${personal.jobTitle} at ${personal.company}. ${personal.location.display}. Building web & AI systems with TypeScript/Next.js.`;
 export const size = {
   width: 1200,

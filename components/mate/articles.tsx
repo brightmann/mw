@@ -1,13 +1,26 @@
 import { getAllArticles } from '@/lib/articles/parser';
 import { ArticlePreview } from './article-preview';
+import { BlogPagination } from './blog-pagination';
 
-export async function Articles() {
+export const ARTICLES_PER_PAGE = 5;
+
+export async function getArticlePages(): Promise<number> {
+  const articles = await getAllArticles();
+  const count = articles.filter((article) => !article.frontmatter.translated).length;
+  return Math.max(1, Math.ceil(count / ARTICLES_PER_PAGE));
+}
+
+export async function Articles({ page = 1 }: { page?: number }) {
   const articles = await getAllArticles();
 
   // Filter non-translated articles once (server-side, so useMemo not needed)
   const nonTranslatedArticles = articles.filter((article) => !article.frontmatter.translated);
-  const featuredArticle = nonTranslatedArticles[0];
-  const remainingArticles = nonTranslatedArticles.slice(1);
+  const totalPages = Math.max(1, Math.ceil(nonTranslatedArticles.length / ARTICLES_PER_PAGE));
+  const pageArticles = nonTranslatedArticles.slice((page - 1) * ARTICLES_PER_PAGE, page * ARTICLES_PER_PAGE);
+
+  // The newest article gets the featured hero, but only on the first page
+  const featuredArticle = page === 1 ? pageArticles[0] : undefined;
+  const gridArticles = page === 1 ? pageArticles.slice(1) : pageArticles;
 
   return (
     <div>
@@ -34,7 +47,7 @@ export async function Articles() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-        {remainingArticles.map((article) => (
+        {gridArticles.map((article) => (
           <ArticlePreview
             key={article.frontmatter.slug}
             title={article.frontmatter.title}
@@ -47,6 +60,8 @@ export async function Articles() {
           />
         ))}
       </div>
+
+      <BlogPagination currentPage={page} totalPages={totalPages} />
     </div>
   );
 }

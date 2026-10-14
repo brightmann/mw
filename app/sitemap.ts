@@ -3,6 +3,8 @@ import path from 'node:path';
 import type { MetadataRoute } from 'next';
 import config from '@/lib/config';
 
+export const dynamic = 'force-static';
+
 function generateArticlesSitemap(): MetadataRoute.Sitemap {
   const result: MetadataRoute.Sitemap = [];
   const articlesDir = path.join(process.cwd(), './articles');
